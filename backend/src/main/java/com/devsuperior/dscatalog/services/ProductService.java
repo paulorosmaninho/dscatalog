@@ -38,7 +38,7 @@ public class ProductService {
 		 
 		Page<Product> page = productRepository.findAll(pageRequest);
 		
-		Page<ProductDTO> pageDto = page.map(elementoList -> new ProductDTO(elementoList));
+		Page<ProductDTO> pageDto = page.map(elementoList -> new ProductDTO(elementoList, elementoList.getCategories()));
 		
 		return pageDto;
 	}
