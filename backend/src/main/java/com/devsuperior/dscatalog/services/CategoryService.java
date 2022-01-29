@@ -43,11 +43,20 @@ public class CategoryService {
 		}
 		
 		Category entity = objOptional.get();
-		
-		CategoryDTO categoryDto = new CategoryDTO(entity);
 				
-		return categoryDto;
+		return new CategoryDTO(entity);
+	}
+
+
+
+	@Transactional
+	public CategoryDTO insert(CategoryDTO categoryDto) {
 		
+		Category entity = new Category();
+		entity.setName(categoryDto.getName());
+		entity = categoryRepository.save(entity);
+		
+		return new CategoryDTO(entity);
 	}
 
 }
