@@ -87,30 +87,30 @@ public class ProductServicesTests {
 
 		// Método save retorna
 		Mockito.when(productRepository.save(ArgumentMatchers.any())).thenReturn(product);
-//		Mockito.when(productRepository.save(product)).thenReturn(product);
+		// Mockito.when(productRepository.save(product)).thenReturn(product);
 
 		// Método findById com Id existente para retornar um Optional preenchido
 		Mockito.when(productRepository.findById(existingId)).thenReturn(Optional.of(product));
 
 		// Método findById com Id inexistente para retornar um Optional vazio
 		Mockito.when(productRepository.findById(nonExistingId)).thenReturn(Optional.empty());
-		
+
 		// Método getById com Id existente para retornar um produto
 		Mockito.when(productRepository.getById(existingId)).thenReturn(product);
-//		Mockito.when(productRepository.getOne(existingId)).thenReturn(product);
-		
+		// Mockito.when(productRepository.getOne(existingId)).thenReturn(product);
+
 		// Método getById com Id inexistente para retornar uma exception
 		Mockito.when(productRepository.getById(nonExistingId)).thenThrow(EntityNotFoundException.class);
-//		Mockito.when(productRepository.getOne(nonExistingId)).thenThrow(EntityNotFoundException.class);
-		
+		// Mockito.when(productRepository.getOne(nonExistingId)).thenThrow(EntityNotFoundException.class);
+
 		// Método getById com Id existente para retornar uma categoria
 		Mockito.when(categoryRepository.getById(existingId)).thenReturn(category);
-//		Mockito.when(categoryRepository.getOne(existingId)).thenReturn(category);
-		
+		// Mockito.when(categoryRepository.getOne(existingId)).thenReturn(category);
+
 		// Método getById com Id inexistente para retornar uma exception
 		Mockito.when(categoryRepository.getById(nonExistingId)).thenThrow(EntityNotFoundException.class);
-//		Mockito.when(categoryRepository.getOne(nonExistingId)).thenThrow(EntityNotFoundException.class);
-		
+		// Mockito.when(categoryRepository.getOne(nonExistingId)).thenThrow(EntityNotFoundException.class);
+
 	}
 
 	@Test
@@ -217,44 +217,62 @@ public class ProductServicesTests {
 		Mockito.verify(productRepository, Mockito.times(1)).findById(nonExistingId);
 
 	}
-	
-	
-//	@Test
-//	public void insertShouldReturnProductDTOWhenProductExists() {
-//		// Usar padrao AAA. Arrange/Act/Assert
-//
-//		// Arrange. Preparar os dados está no @BeforeEach
-//		ProductDTO productDto = Factory.createProductDTO();
-//
-//		// Act. Ações Necessárias
-//		productDto = productService.insert(productDto);
-//
-//		// Assert. Resultado Esperado
-//		Assertions.assertNotNull(productDto);
-//
-//		// O verify para o método save só funciona se o Id não for perdido na classe ProductService
-//		// Foi preciso adicionar o Id no método copyDtoToEntity
-//		Mockito.verify(productRepository, Mockito.times(1)).save(product);
-//		
-//	}
-	
+
+	// @Test
+	// public void insertShouldReturnProductDTOWhenProductExists() {
+	// // Usar padrao AAA. Arrange/Act/Assert
+	//
+	// // Arrange. Preparar os dados está no @BeforeEach
+	// ProductDTO productDto = Factory.createProductDTO();
+	//
+	// // Act. Ações Necessárias
+	// productDto = productService.insert(productDto);
+	//
+	// // Assert. Resultado Esperado
+	// Assertions.assertNotNull(productDto);
+	//
+	// // O verify para o método save só funciona se o Id não for perdido na classe
+	// ProductService
+	// // Foi preciso adicionar o Id no método copyDtoToEntity
+	// Mockito.verify(productRepository, Mockito.times(1)).save(product);
+	//
+	// }
+
 	@Test
 	public void updateShouldReturnProductDTOWhenProductIdExists() {
 		// Usar padrao AAA. Arrange/Act/Assert
-		
+
 		// Arrange. Preparar os dados está no @BeforeEach
 		ProductDTO productDto = Factory.createProductDTO();
-		
+
 		// Act. Ações Necessárias
 		productDto = productService.update(existingId, productDto);
-		
+
 		// Assert. Resultado Esperado
 		Assertions.assertNotNull(productDto);
-		
+
 		Mockito.verify(productRepository, Mockito.times(1)).save(product);
-		
+
 	}
-	
-	
+
+	@Test
+	public void updateShouldThrowResourceNotFoundExceptionWhenIdDoesNotExists() {
+
+		// Usar padrao AAA. Arrange/Act/Assert
+
+		// Assert. Resultado Esperado
+		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+
+			// Arrange. Preparar os dados está no @BeforeEach
+			ProductDTO productDto = Factory.createProductDTO();
+
+			// Act. Ações Necessárias
+			productDto = productService.update(nonExistingId, productDto);
+
+			// Assert. Resultado Esperado
+			Assertions.assertNotNull(productDto);
+		});
+
+	}
 
 }
