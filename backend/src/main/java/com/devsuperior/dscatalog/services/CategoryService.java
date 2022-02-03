@@ -81,6 +81,7 @@ public class CategoryService {
 		
 		try {
 		Category entity = categoryRepository.getById(id);
+//		Category entity = categoryRepository.getOne(id);
 		updateData(entity, updatedCategoryDto);
 		entity = categoryRepository.save(entity);
 		return new CategoryDTO(entity);

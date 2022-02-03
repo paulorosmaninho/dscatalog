@@ -93,6 +93,7 @@ public class ProductService {
 		try {
 
 			Product entity = productRepository.getById(id);
+//			Product entity = productRepository.getOne(id);
 
 			copyDtoToEntity(entity, updatedProductDTO);
 
@@ -121,6 +122,10 @@ public class ProductService {
 
 
 	private void copyDtoToEntity(Product entity, ProductDTO productDTO) {
+		
+		//Incluido o setId para funcionar o método save com o Mockito.
+//		entity.setId(productDTO.getId());
+		
 		entity.setName(productDTO.getName());
 		entity.setDescription(productDTO.getDescription());
 		entity.setPrice(productDTO.getPrice());
@@ -135,6 +140,7 @@ public class ProductService {
 		//na lista da entidade Categoria que foi instanciada.
 		for(CategoryDTO catDto : productDTO.getCategories()) {
 			Category category = categoryRepository.getById(catDto.getId());
+//			Category category = categoryRepository.getOne(catDto.getId());
 			entity.getCategories().add(category);
 		}
 
