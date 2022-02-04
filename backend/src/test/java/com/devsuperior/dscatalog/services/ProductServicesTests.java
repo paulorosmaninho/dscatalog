@@ -49,14 +49,18 @@ public class ProductServicesTests {
 	// PageImpl é uma classe concreta, que representa uma página de dados.
 	private PageImpl<Product> page;
 
-	private Product product = Factory.createProduct();
-	private Category category = Factory.createCategory();
+	private Product product;
+	private Category category;
+	private ProductDTO productDto;
 
 	@BeforeEach
 	void setUp() throws Exception {
 		existingId = 1L;
 		nonExistingId = 1000L;
 		dependentId = 4L;
+		product = Factory.createProduct();
+		productDto = Factory.createProductDTO();
+		category = Factory.createCategory();
 
 		// Instanciando uma nova page com pelo menos 1 produto na lista
 		page = new PageImpl<>(List.of(product));
@@ -193,7 +197,7 @@ public class ProductServicesTests {
 		// Arrange. Preparar os dados está no @BeforeEach
 
 		// Act. Ações Necessárias
-		ProductDTO productDto = productService.findById(existingId);
+		productDto = productService.findById(existingId);
 
 		// Assert. Resultado Esperado
 		Assertions.assertNotNull(productDto);
@@ -218,32 +222,32 @@ public class ProductServicesTests {
 
 	}
 
-	// @Test
-	// public void insertShouldReturnProductDTOWhenProductExists() {
-	// // Usar padrao AAA. Arrange/Act/Assert
-	//
-	// // Arrange. Preparar os dados está no @BeforeEach
-	// ProductDTO productDto = Factory.createProductDTO();
-	//
-	// // Act. Ações Necessárias
-	// productDto = productService.insert(productDto);
-	//
-	// // Assert. Resultado Esperado
-	// Assertions.assertNotNull(productDto);
-	//
-	// // O verify para o método save só funciona se o Id não for perdido na classe
-	// ProductService
-	// // Foi preciso adicionar o Id no método copyDtoToEntity
-	// Mockito.verify(productRepository, Mockito.times(1)).save(product);
-	//
-	// }
+	@Test
+	 public void insertShouldReturnProductDTOWhenProductExists() {
+	 // Usar padrao AAA. Arrange/Act/Assert
+	
+	 // Arrange. Preparar os dados está no @BeforeEach
+	 ProductDTO productDto = Factory.createProductDTO();
+	
+	 // Act. Ações Necessárias
+	 productDto = productService.insert(productDto);
+	
+	 // Assert. Resultado Esperado
+	 Assertions.assertNotNull(productDto);
+	
+	 // O verify para o método save só funciona se 
+	 // o Id não for perdido na classe ProductService
+
+	 // Foi preciso adicionar o Id no método copyDtoToEntity
+	 Mockito.verify(productRepository, Mockito.times(1)).save(product);
+	
+	 }
 
 	@Test
 	public void updateShouldReturnProductDTOWhenProductIdExists() {
 		// Usar padrao AAA. Arrange/Act/Assert
 
 		// Arrange. Preparar os dados está no @BeforeEach
-		ProductDTO productDto = Factory.createProductDTO();
 
 		// Act. Ações Necessárias
 		productDto = productService.update(existingId, productDto);
@@ -264,7 +268,6 @@ public class ProductServicesTests {
 		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
 
 			// Arrange. Preparar os dados está no @BeforeEach
-			ProductDTO productDto = Factory.createProductDTO();
 
 			// Act. Ações Necessárias
 			productDto = productService.update(nonExistingId, productDto);
