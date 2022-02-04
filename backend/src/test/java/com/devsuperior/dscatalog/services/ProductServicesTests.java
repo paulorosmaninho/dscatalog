@@ -222,26 +222,26 @@ public class ProductServicesTests {
 
 	}
 
-	@Test
-	 public void insertShouldReturnProductDTOWhenProductExists() {
-	 // Usar padrao AAA. Arrange/Act/Assert
-	
-	 // Arrange. Preparar os dados está no @BeforeEach
-	 ProductDTO productDto = Factory.createProductDTO();
-	
-	 // Act. Ações Necessárias
-	 productDto = productService.insert(productDto);
-	
-	 // Assert. Resultado Esperado
-	 Assertions.assertNotNull(productDto);
-	
-	 // O verify para o método save só funciona se 
-	 // o Id não for perdido na classe ProductService
-
-	 // Foi preciso adicionar o Id no método copyDtoToEntity
-	 Mockito.verify(productRepository, Mockito.times(1)).save(product);
-	
-	 }
+//	@Test
+//	 public void insertShouldReturnProductDTOWhenProductExists() {
+//	 // Usar padrao AAA. Arrange/Act/Assert
+//	
+//	 // Arrange. Preparar os dados está no @BeforeEach
+//	 ProductDTO productDto = Factory.createProductDTO();
+//	
+//	 // Act. Ações Necessárias
+//	 productDto = productService.insert(productDto);
+//	
+//	 // Assert. Resultado Esperado
+//	 Assertions.assertNotNull(productDto);
+//	
+//	 // O verify para o método save só funciona se 
+//	 // o Id não for perdido na classe ProductService
+//
+//	 // Foi preciso adicionar o Id no método copyDtoToEntity
+//	 Mockito.verify(productRepository, Mockito.times(1)).save(product);
+//	
+//	 }
 
 	@Test
 	public void updateShouldReturnProductDTOWhenProductIdExists() {

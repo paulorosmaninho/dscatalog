@@ -112,7 +112,8 @@ public class ProductService {
 	private void copyDtoToEntity(Product entity, ProductDTO productDTO) {
 
 		// Incluido o setId para funcionar o método save com o Mockito.
-		entity.setId(productDTO.getId());
+		// Retirar depois
+		// entity.setId(productDTO.getId());
 
 		entity.setName(productDTO.getName());
 		entity.setDescription(productDTO.getDescription());
