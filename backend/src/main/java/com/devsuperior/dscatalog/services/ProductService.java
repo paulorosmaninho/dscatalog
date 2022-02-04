@@ -30,7 +30,7 @@ public class ProductService {
 	@Autowired
 	private CategoryRepository categoryRepository;
 
-	// 2022-02-01 - Refatoracao da paginacao utilizando um objeto pageable
+	// 2022-02-01 - Refatoração da paginação utilizando um objeto pageable
 	// @Transactional(readOnly = true)
 	// public Page<ProductDTO> findAllPaged(PageRequest pageRequest) {
 	//
@@ -42,7 +42,7 @@ public class ProductService {
 	// return pageDto;
 	// }
 
-	// 2022-02-01 - Refatoracao da paginacao utilizando um objeto pageable
+	// 2022-02-01 - Refatoração da paginação utilizando um objeto pageable
 	@Transactional(readOnly = true)
 	public Page<ProductDTO> findAllPaged(Pageable pageable) {
 

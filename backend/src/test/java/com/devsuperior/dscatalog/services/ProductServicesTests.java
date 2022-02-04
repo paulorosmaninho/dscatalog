@@ -44,6 +44,8 @@ public class ProductServicesTests {
 
 	private long existingId;
 	private long nonExistingId;
+	private long existingCategoryId;
+	private long nonExistingCategoryId;
 	private long dependentId;
 
 	// PageImpl é uma classe concreta, que representa uma página de dados.
@@ -57,6 +59,8 @@ public class ProductServicesTests {
 	void setUp() throws Exception {
 		existingId = 1L;
 		nonExistingId = 1000L;
+		existingCategoryId = 2L;
+		nonExistingCategoryId = 2000L;
 		dependentId = 4L;
 		product = Factory.createProduct();
 		productDto = Factory.createProductDTO();
@@ -108,11 +112,11 @@ public class ProductServicesTests {
 		// Mockito.when(productRepository.getOne(nonExistingId)).thenThrow(EntityNotFoundException.class);
 
 		// Método getById com Id existente para retornar uma categoria
-		Mockito.when(categoryRepository.getById(existingId)).thenReturn(category);
+		Mockito.when(categoryRepository.getById(existingCategoryId)).thenReturn(category);
 		// Mockito.when(categoryRepository.getOne(existingId)).thenReturn(category);
 
 		// Método getById com Id inexistente para retornar uma exception
-		Mockito.when(categoryRepository.getById(nonExistingId)).thenThrow(EntityNotFoundException.class);
+		Mockito.when(categoryRepository.getById(nonExistingCategoryId)).thenThrow(EntityNotFoundException.class);
 		// Mockito.when(categoryRepository.getOne(nonExistingId)).thenThrow(EntityNotFoundException.class);
 
 	}
