@@ -31,6 +31,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @WebMvcTest(ProductController.class)
 public class ProductControllerTests {
 
+	
+	//O MockMvc permite simular a chamada das rotas
+	//Exemplo: método GET na rota: /products/1
 	@Autowired
 	private MockMvc mockMvc;
 
