@@ -6,15 +6,18 @@ import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.devsuperior.dscatalog.dto.ProductDTO;
 import com.devsuperior.dscatalog.dto.RoleDTO;
 import com.devsuperior.dscatalog.dto.UserDTO;
 import com.devsuperior.dscatalog.dto.UserInsertDTO;
+import com.devsuperior.dscatalog.entities.Product;
 import com.devsuperior.dscatalog.entities.Role;
 import com.devsuperior.dscatalog.entities.User;
 import com.devsuperior.dscatalog.repositories.RoleRepository;
@@ -30,9 +33,9 @@ public class UserService {
 
 	@Autowired
 	private RoleRepository roleRepository;
-	
+
 	// Injetar o BCryptPasswordEncoder que foi definido como
-	// Bean no pacote config 
+	// Bean no pacote config
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 
@@ -86,7 +89,7 @@ public class UserService {
 
 			return new UserDTO(entity);
 		} catch (EntityNotFoundException e) {
-			throw new ResourceNotFoundException("User " + id + " não encontrada");
+			throw new ResourceNotFoundException("User " + id + " não encontrado");
 		}
 
 	}
@@ -96,8 +99,8 @@ public class UserService {
 
 			userRepository.deleteById(id);
 
-		} catch (EntityNotFoundException e) {
-			throw new ResourceNotFoundException("User " + id + " não encontrada");
+		} catch (EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException("User " + id + " não encontrado");
 		} catch (DataIntegrityViolationException e) {
 			throw new DatabaseException(e.getMessage());
 		}
