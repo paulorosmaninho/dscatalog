@@ -6,6 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
+
 import com.devsuperior.dscatalog.entities.Category;
 import com.devsuperior.dscatalog.entities.Product;
 
@@ -14,10 +19,20 @@ public class ProductDTO implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
+	
+	@Size(min = 3, max = 80, message = "Nome do produto deve ter entre 3 e 80 caracteres")
+	@NotBlank(message = "Nome do Produto é um campo obrigatório")
 	private String name;
+	
+	@NotBlank(message = "Descrição do produto é um campo obrigatório")
 	private String description;
+	
+	@Positive(message = "Preço do produto deve ser positivo")
 	private Double price;
+	
 	private String imgUrl;
+	
+	@PastOrPresent(message = "A data do produto não pode ser futura")
 	private Instant moment;
 	
 	private List<CategoryDTO> categories = new ArrayList<>();
