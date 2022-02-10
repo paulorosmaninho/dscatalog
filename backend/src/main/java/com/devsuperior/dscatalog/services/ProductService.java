@@ -85,7 +85,6 @@ public class ProductService {
 		try {
 
 			Product entity = productRepository.getById(id);
-			// Product entity = productRepository.getOne(id);
 
 			copyDtoToEntity(entity, updatedProductDTO);
 
@@ -129,7 +128,6 @@ public class ProductService {
 		// na lista da entidade Categoria que foi instanciada.
 		for (CategoryDTO catDto : productDTO.getCategories()) {
 			Category category = categoryRepository.getById(catDto.getId());
-			// Category category = categoryRepository.getOne(catDto.getId());
 			entity.getCategories().add(category);
 		}
 
