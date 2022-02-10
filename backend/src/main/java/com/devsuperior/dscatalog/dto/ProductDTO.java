@@ -45,6 +45,9 @@ public class ProductDTO implements Serializable{
 
 	public ProductDTO(Product entity, Set<Category> categories) {
 		this(entity);
+		
+		//Solução LAZY para obter as categorias de um produto
+		//Não tem Fetch.type definido na entidade
 		categories.forEach(category -> this.categories.add(new CategoryDTO(category)));
 	}
 

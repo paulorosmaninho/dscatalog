@@ -20,96 +20,82 @@ import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class CategoryService {
-	
+
 	@Autowired
 	private CategoryRepository categoryRepository;
 
-	
-//	2022-02-01 - Refatoracao da paginacao utilizando um objeto pageable
-//	@Transactional(readOnly = true)
-//	public Page<CategoryDTO> findAllPaged(PageRequest pageRequest) {
-//		 
-//		Page<Category> page = categoryRepository.findAll(pageRequest);
-//		
-//		Page<CategoryDTO> pageDto = page.map(elementoList -> new CategoryDTO(elementoList));
-//		return pageDto;
-//	}
-	
+	// 2022-02-01 - Refatoracao da paginacao utilizando um objeto pageable
+	// @Transactional(readOnly = true)
+	// public Page<CategoryDTO> findAllPaged(PageRequest pageRequest) {
+	//
+	// Page<Category> page = categoryRepository.findAll(pageRequest);
+	//
+	// Page<CategoryDTO> pageDto = page.map(elementoList -> new
+	// CategoryDTO(elementoList));
+	// return pageDto;
+	// }
 
-//	2022-02-01 - Refatoracao da paginacao utilizando um objeto pageable 
+	// 2022-02-01 - Refatoracao da paginacao utilizando um objeto pageable
 	@Transactional(readOnly = true)
 	public Page<CategoryDTO> findAllPaged(Pageable pageable) {
-		
+
 		Page<Category> page = categoryRepository.findAll(pageable);
-		
+
 		Page<CategoryDTO> pageDto = page.map(elementoList -> new CategoryDTO(elementoList));
 		return pageDto;
 	}
-	
-	
-	
+
 	@Transactional(readOnly = true)
-	public CategoryDTO findById(Long id){
-		
+	public CategoryDTO findById(Long id) {
+
 		Optional<Category> objOptional = categoryRepository.findById(id);
-		
-		if(!objOptional.isPresent()) {
+
+		if (!objOptional.isPresent()) {
 			throw new ResourceNotFoundException("Categoria " + id + " não encontrada");
 		}
-		
+
 		Category entity = objOptional.get();
-				
+
 		return new CategoryDTO(entity);
 	}
-
-
 
 	@Transactional
 	public CategoryDTO insert(CategoryDTO categoryDto) {
-		
+
 		Category entity = new Category();
 		entity.setName(categoryDto.getName());
 		entity = categoryRepository.save(entity);
-		
+
 		return new CategoryDTO(entity);
 	}
 
-
-	
 	@Transactional
 	public CategoryDTO update(Long id, CategoryDTO updatedCategoryDto) {
-		
+
 		try {
-		Category entity = categoryRepository.getById(id);
-		updateData(entity, updatedCategoryDto);
-		entity = categoryRepository.save(entity);
-		return new CategoryDTO(entity);
-		}catch(EntityNotFoundException e) {
+			Category entity = categoryRepository.getById(id);
+			updateData(entity, updatedCategoryDto);
+			entity = categoryRepository.save(entity);
+			return new CategoryDTO(entity);
+		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException("Categoria " + id + " não encontrada");
 		}
 	}
-	
 
-	
 	private void updateData(Category entity, CategoryDTO updatedCategoryDto) {
 		entity.setName(updatedCategoryDto.getName());
 	}
-
-
 
 	public void delete(Long id) {
 
 		try {
 			categoryRepository.deleteById(id);
-		}
-		catch(EmptyResultDataAccessException e) {
+		} catch (EmptyResultDataAccessException e) {
 			throw new ResourceNotFoundException("Categoria " + id + " não encontrada");
-		}
-		catch(DataIntegrityViolationException e) {
+		} catch (DataIntegrityViolationException e) {
 			throw new DatabaseException(e.getMessage());
 		}
 
-		
 	}
 
 }
