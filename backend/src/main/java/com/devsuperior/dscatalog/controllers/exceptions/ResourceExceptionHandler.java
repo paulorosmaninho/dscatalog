@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -46,17 +47,25 @@ public class ResourceExceptionHandler {
 		return ResponseEntity.status(status).body(stdError);
 	}
 
+	// Personaliza o tratamento de erros do Bean Validation
+	// Criada a classe ValidationError para tratar a lista de erros
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<StandardError> validation(MethodArgumentNotValidException e, HttpServletRequest request) {
+	public ResponseEntity<ValidationError> validation(MethodArgumentNotValidException e, HttpServletRequest request) {
 		String error = "Erro de validação.";
 		HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
-		StandardError stdError = new StandardError();
+		ValidationError stdError = new ValidationError();
 
 		stdError.setTimestampUTC(Instant.now());
 		stdError.setStatus(status.value());
 		stdError.setError(error);
 		stdError.setMessage(e.getMessage());
 		stdError.setPath(request.getRequestURI());
+
+		for (FieldError fe : e.getBindingResult().getFieldErrors()) {
+
+			stdError.addError(fe.getField(), fe.getDefaultMessage());
+
+		}
 
 		return ResponseEntity.status(status).body(stdError);
 	}
