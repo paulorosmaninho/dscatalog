@@ -42,7 +42,7 @@ public class UserUpdateValidator implements ConstraintValidator<UserUpdateValid,
 		// Coloque aqui seus testes de validação, acrescentando objetos FieldMessage à
 		// lista
 
-		// Define var (java 10) para obter as o mapa de variáveis da URL
+		// Define var (java 10) para obter as o mapa de variáveis (nome e valor) da URL
 		@SuppressWarnings("unchecked")
 		var uriVars = (Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
 
@@ -51,7 +51,7 @@ public class UserUpdateValidator implements ConstraintValidator<UserUpdateValid,
 
 		List<FieldMessage> list = new ArrayList<>();
 
-		// Testa se e-mail já está no banco
+		// Testa se e-mail já está no banco para outro usuário
 		User user = repository.findByEmail(dto.getEmail());
 
 		if (user != null && userId != user.getId()) {
