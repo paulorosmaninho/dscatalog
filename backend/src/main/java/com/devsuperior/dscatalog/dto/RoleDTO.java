@@ -2,6 +2,8 @@ package com.devsuperior.dscatalog.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotBlank;
+
 import com.devsuperior.dscatalog.entities.Role;
 
 public class RoleDTO implements Serializable{
@@ -9,6 +11,8 @@ public class RoleDTO implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
+	
+	@NotBlank(message = "O perfil do usuário é um campo obrigatório")
 	private String authority;
 	
 	public RoleDTO() {

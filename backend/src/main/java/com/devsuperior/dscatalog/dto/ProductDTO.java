@@ -21,18 +21,18 @@ public class ProductDTO implements Serializable{
 	private Long id;
 	
 	@Size(min = 3, max = 80, message = "Nome do produto deve ter entre 3 e 80 caracteres")
-	@NotBlank(message = "Nome do Produto é um campo obrigatório")
+	@NotBlank(message = "O nome do Produto é um campo obrigatório")
 	private String name;
 	
-	@NotBlank(message = "Descrição do produto é um campo obrigatório")
+	@NotBlank(message = "A descrição do produto é um campo obrigatório")
 	private String description;
 	
-	@Positive(message = "Preço do produto deve ser positivo")
+	@Positive(message = "O preço do produto deve ser positivo")
 	private Double price;
 	
 	private String imgUrl;
 	
-	@PastOrPresent(message = "A data do produto não pode ser futura")
+	@PastOrPresent(message = "A data do produto não pode ser maior que a data de hoje")
 	private Instant moment;
 	
 	private List<CategoryDTO> categories = new ArrayList<>();

@@ -2,6 +2,8 @@ package com.devsuperior.dscatalog.controllers;
 
 import java.net.URI;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -54,8 +56,6 @@ public class CategoryController {
 		return ResponseEntity.ok().body(pageDto);
 	}
 
-
-
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<CategoryDTO> findById(@PathVariable Long id) {
 
@@ -65,10 +65,8 @@ public class CategoryController {
 
 	}
 
-
-
 	@PostMapping
-	public ResponseEntity<CategoryDTO> insert(@RequestBody CategoryDTO categoryDto) {
+	public ResponseEntity<CategoryDTO> insert(@Valid @RequestBody CategoryDTO categoryDto) {
 
 		categoryDto = categoryService.insert(categoryDto);
 
@@ -79,17 +77,13 @@ public class CategoryController {
 
 	}
 
-
-
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<CategoryDTO> update(@PathVariable Long id, @RequestBody CategoryDTO categoryDto) {
+	public ResponseEntity<CategoryDTO> update(@Valid @PathVariable Long id, @RequestBody CategoryDTO categoryDto) {
 
 		categoryDto = categoryService.update(id, categoryDto);
 
 		return ResponseEntity.ok().body(categoryDto);
 	}
-
-
 
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
