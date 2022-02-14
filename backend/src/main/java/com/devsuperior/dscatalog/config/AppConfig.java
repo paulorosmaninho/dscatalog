@@ -1,5 +1,6 @@
 package com.devsuperior.dscatalog.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -9,6 +10,11 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 @Configuration
 public class AppConfig {
 
+	//Obtém a palavra secreta do arquivo application.properties
+	@Value("${jwt.secret}")
+	private String jwtSecret;
+	
+	
 	// Anotação @Bean serve para definir métodos
 	// que serão injetados em outras classes
 	@Bean
@@ -21,7 +27,7 @@ public class AppConfig {
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
 		JwtAccessTokenConverter tokenConverter = new JwtAccessTokenConverter();
-		tokenConverter.setSigningKey("MY-JWT-SECRET");
+		tokenConverter.setSigningKey(jwtSecret);
 		return tokenConverter;
 	}
 
