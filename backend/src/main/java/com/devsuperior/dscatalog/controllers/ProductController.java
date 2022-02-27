@@ -49,9 +49,11 @@ public class ProductController {
 	// 2022-02-01 - Refatoracao da paginacao utilizando um objeto pageable
 	@GetMapping
 	public ResponseEntity<Page<ProductDTO>> findAll(Pageable pageable, 
-			@RequestParam(value = "categoryId", defaultValue = "0") Long categoryId){
+			@RequestParam(value = "categoryId", defaultValue = "0") Long categoryId,
+			@RequestParam(value = "name", defaultValue = "") String name)
+	{
 
-		Page<ProductDTO> pageDto = productService.findAllPaged(pageable, categoryId);
+		Page<ProductDTO> pageDto = productService.findAllPaged(pageable, categoryId, name.trim());
 
 		return ResponseEntity.ok().body(pageDto);
 	}

@@ -16,8 +16,11 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
 //	Utiliza JOIN explicito com categoria e filtra com cláusula WHERE e IN
 	
 	@Query(value = "SELECT DISTINCT obj FROM Product obj INNER JOIN obj.categories cats WHERE "
-			+ " (:category IS NULL OR :category IN cats) ")
-	Page<Product> findProductCategory(Pageable pageable, Category category);
+			+ " (:category IS NULL OR :category IN cats) "
+			+ " AND (LOWER(obj.name) LIKE CONCAT('%',LOWER(:name),'%')"
+			+ " )"
+			)
+	Page<Product> findProductCategory(Pageable pageable, Category category, String name);
 	
 	
 //	Teste. Substituir OR :category por OR NULL e funcionou
