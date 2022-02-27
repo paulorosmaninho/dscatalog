@@ -1,5 +1,7 @@
 package com.devsuperior.dscatalog.services;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
@@ -47,20 +49,20 @@ public class ProductService {
 	@Transactional(readOnly = true)
 	public Page<ProductDTO> findAllPaged(Pageable pageable, Long categoryId, String name) {
 
-		Category category;
+		List<Category> categories;
 		
 		//category não pode ser zero, pois dará erro no Repository
 		if(categoryId == 0 ) {
 			
-			category = null;
+			categories = null;
 			
 		}else {
 			
-			//Instancia uma categoria com o id recebido da página
-			category = categoryRepository.getById(categoryId);
+			//Instancia uma lista de categorias com o id recebido da página
+			categories = Arrays.asList(categoryRepository.getById(categoryId));
 		}
 		
-		Page<Product> page = productRepository.findProductCategory(pageable, category, name);
+		Page<Product> page = productRepository.findProductCategory(pageable, categories, name);
 
 //		Page<ProductDTO> pageDto = page.map(elementoList -> new ProductDTO(elementoList, elementoList.getCategories()));
 		Page<ProductDTO> pageDto = page.map(elementoList -> new ProductDTO(elementoList));
