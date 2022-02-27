@@ -80,7 +80,7 @@ public class ProductServiceIT {
 		// Puxando a página 0 com tamanho de 10
 		PageRequest pageRequest = PageRequest.of(0, 10);
 
-		Page<ProductDTO> productDTO = productService.findAllPaged(pageRequest);
+		Page<ProductDTO> productDTO = productService.findAllPaged(pageRequest, 0L, "");
 
 		Assertions.assertFalse(productDTO.isEmpty()); /* Valida se NÃO retornou vazio */
 		Assertions.assertEquals(0, productDTO.getNumber()); /* Valida se é a pagina 0 */
@@ -95,7 +95,7 @@ public class ProductServiceIT {
 		// Puxando a página 50 com tamanho de 10
 		PageRequest pageRequest = PageRequest.of(50, 10);
 
-		Page<ProductDTO> productDTO = productService.findAllPaged(pageRequest);
+		Page<ProductDTO> productDTO = productService.findAllPaged(pageRequest, 0L, "");
 
 		Assertions.assertTrue(productDTO.isEmpty()); /* Valida se retornou vazio */
 
@@ -107,7 +107,7 @@ public class ProductServiceIT {
 		// Puxando a página 0 com tamanho de 10
 		PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("name"));
 		
-		Page<ProductDTO> productDTO = productService.findAllPaged(pageRequest);
+		Page<ProductDTO> productDTO = productService.findAllPaged(pageRequest, 0L, "");
 		
 		//Validando se o conteúdo retornado do Banco de Dados está ordenado
 		Assertions.assertFalse(productDTO.isEmpty()); /* Valida se NÃO retornou vazio */

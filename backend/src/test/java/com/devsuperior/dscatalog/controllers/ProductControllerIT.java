@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.devsuperior.dscatalog.dto.ProductDTO;
 import com.devsuperior.dscatalog.tests.Factory;
+import com.devsuperior.dscatalog.tests.TokenUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 //Teste de Integração
@@ -44,14 +45,22 @@ public class ProductControllerIT {
 
 	@Autowired
 	private ObjectMapper objectMapper;
+	
+	@Autowired
+	private TokenUtil tokenUtil;
 
 	private ProductDTO productDto;
 	private Long existingId;
 	private Long nonExistingId;
 	private Long countTotalProducts;
+	private String username;
+	private String password;
+
 
 	@BeforeEach
 	void setUp() throws Exception {
+		username = "maria@gmail.com";
+		password = "123456";
 		existingId = 1L;
 		nonExistingId = 1000L;
 		countTotalProducts = 25L;
@@ -82,6 +91,9 @@ public class ProductControllerIT {
 	@Test
 	public void updateShouldReturnProductDTOWhenIdExists() throws Exception {
 
+		String accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
+		
+		
 		// O ObjectMapper converte um objeto JAVA em um string JSON
 		String jsonBody = objectMapper.writeValueAsString(productDto);
 
@@ -91,6 +103,7 @@ public class ProductControllerIT {
 		// Requisição com PUT precisa passar um parâmetro na URL
 		// e os valores no corpo utilizando o método content()
 		ResultActions result = mockMvc.perform(put("/products/{id}", existingId).content(jsonBody)
+				.header("Authorization", "Bearer " + accessToken)
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON));
 
 		result.andExpect(status().isOk());
@@ -105,12 +118,15 @@ public class ProductControllerIT {
 	@Test
 	public void updateShouldReturnNotFoundWhenIdDoesNotExists() throws Exception {
 
+		String accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
+		
 		// O ObjectMapper converte um objeto JAVA em um string JSON
 		String jsonBody = objectMapper.writeValueAsString(productDto);
 
 		// Requisição com PUT precisa passar um parâmetro na URL
 		// e os valores no corpo utilizando o método content()
 		ResultActions result = mockMvc.perform(put("/products/{id}", nonExistingId).content(jsonBody)
+				.header("Authorization", "Bearer " + accessToken)
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON));
 
 		result.andExpect(status().isNotFound());
@@ -122,6 +138,8 @@ public class ProductControllerIT {
 	@Test
 	public void insertShouldReturnProductDTOWhenIdExists() throws Exception {
 
+		String accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
+		
 		String expectedName = "Monitor";
 		String expectedDescription = "Monitor 22 Polegadas";
 		productDto.setName(expectedName);
@@ -132,6 +150,7 @@ public class ProductControllerIT {
 
 		// Requisição com POST precisa passar os valores no corpo utilizando o método content()
 		ResultActions result = mockMvc.perform(post("/products").content(jsonBody)
+				.header("Authorization", "Bearer " + accessToken)
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON));
 
 		result.andExpect(status().isCreated());

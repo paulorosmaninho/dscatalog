@@ -14,7 +14,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageImpl;
@@ -26,11 +27,17 @@ import com.devsuperior.dscatalog.dto.ProductDTO;
 import com.devsuperior.dscatalog.services.ProductService;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
 import com.devsuperior.dscatalog.tests.Factory;
+import com.devsuperior.dscatalog.tests.TokenUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@WebMvcTest(ProductController.class)
+//@WebMvcTest(ProductController.class)
+//Refatorado em 27/02/2022
+@SpringBootTest
+@AutoConfigureMockMvc
 public class ProductControllerTests {
 
+	@Autowired
+	private TokenUtil tokenUtil;
 	
 	//O MockMvc permite simular a chamada das rotas
 	//Exemplo: método GET na rota: /products/1
@@ -44,6 +51,7 @@ public class ProductControllerTests {
 
 	@Autowired
 	private ObjectMapper objectMapper;
+	
 
 	// PageImpl é uma classe concreta, que representa uma página de dados.
 	private PageImpl<ProductDTO> page;
@@ -52,10 +60,15 @@ public class ProductControllerTests {
 	private Long existingId;
 	private Long nonExistingId;
 	private long dependentId;
+	private String username;
+	private String password;
+
 
 	@BeforeEach
 	void setUp() throws Exception {
 
+		username = "maria@gmail.com";
+		password = "123456";
 		existingId = 1L;
 		nonExistingId = 1000L;
 		dependentId = 4L;
@@ -66,7 +79,7 @@ public class ProductControllerTests {
 		page = new PageImpl<>(List.of(productDto));
 
 		// Métodos NÃO VOID: Primeiro o WHEN, depois a ação e então o THEN
-		Mockito.when(productService.findAllPaged(ArgumentMatchers.any())).thenReturn(page);
+		Mockito.when(productService.findAllPaged(ArgumentMatchers.any(), Mockito.anyLong(), Mockito.anyString())).thenReturn(page);
 
 		Mockito.when(productService.findById(existingId)).thenReturn(productDto);
 
@@ -132,12 +145,15 @@ public class ProductControllerTests {
 	@Test
 	public void updateShouldReturnProductDTOWhenIdExists() throws Exception {
 
+		String accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
+		
 		// O ObjectMapper converte um objeto JAVA em um string JSON
 		String jsonBody = objectMapper.writeValueAsString(productDto);
 
 		// Requisição com PUT precisa passar um parâmetro na URL
 		// e os valores no corpo utilizando o método content()
 		ResultActions result = mockMvc.perform(put("/products/{id}", existingId).content(jsonBody)
+				.header("Authorization", "Bearer " + accessToken)
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON));
 
 		result.andExpect(status().isOk());
@@ -152,12 +168,15 @@ public class ProductControllerTests {
 	@Test
 	public void updateShouldReturnNotFoundWhenIdDoesNotExists() throws Exception {
 
+		String accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
+		
 		// O ObjectMapper converte um objeto JAVA em um string JSON
 		String jsonBody = objectMapper.writeValueAsString(productDto);
 
 		// Requisição com PUT precisa passar um parâmetro na URL
 		// e os valores no corpo utilizando o método content()
 		ResultActions result = mockMvc.perform(put("/products/{id}", nonExistingId).content(jsonBody)
+				.header("Authorization", "Bearer " + accessToken)
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON));
 
 		result.andExpect(status().isNotFound());
@@ -167,7 +186,11 @@ public class ProductControllerTests {
 	@Test
 	public void deleteShouldReturnNothingWhenIdExists() throws Exception {
 
-		ResultActions result = mockMvc.perform(delete("/products/{id}", existingId).accept(MediaType.APPLICATION_JSON));
+		String accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
+		
+		ResultActions result = mockMvc.perform(delete("/products/{id}", existingId)
+				.header("Authorization", "Bearer " + accessToken)
+				.accept(MediaType.APPLICATION_JSON));
 
 		result.andExpect(status().isNoContent());
 
@@ -176,8 +199,12 @@ public class ProductControllerTests {
 	@Test
 	public void deleteShouldReturnNotFoundWhenIdDoesNotExists() throws Exception {
 
+		String accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
+		
 		ResultActions result = mockMvc
-				.perform(delete("/products/{id}", nonExistingId).accept(MediaType.APPLICATION_JSON));
+						.perform(delete("/products/{id}", nonExistingId)
+						.header("Authorization", "Bearer " + accessToken)
+						.accept(MediaType.APPLICATION_JSON));
 
 		result.andExpect(status().isNotFound());
 	}
@@ -185,12 +212,16 @@ public class ProductControllerTests {
 	@Test
 	public void insertShouldReturnProductDTOWhenProductDTOExists() throws Exception {
 
+		String accessToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
+		
 		// O ObjectMapper converte um objeto JAVA em um string JSON
 		String jsonBody = objectMapper.writeValueAsString(productDto);
 
 		// Requisição com POST precisa passar os valores no corpo utilizando o método
 		// content()
-		ResultActions result = mockMvc.perform(post("/products").content(jsonBody)
+		ResultActions result = mockMvc.perform(post("/products")
+				.header("Authorization", "Bearer " + accessToken)
+				.content(jsonBody)
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON));
 
 		result.andExpect(status().isCreated());

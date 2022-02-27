@@ -1,5 +1,7 @@
 package com.devsuperior.dscatalog.services;
 
+import static org.mockito.ArgumentMatchers.any;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -102,6 +104,9 @@ public class ProductServicesTests {
 
 		// Método findById com Id inexistente para retornar um Optional vazio
 		Mockito.when(productRepository.findById(nonExistingId)).thenReturn(Optional.empty());
+		
+		// Método findProductCategory adicionado após refatoração do ProductService e ProductRepository 
+		Mockito.when(productRepository.findProductCategory(any(), any(), any())).thenReturn(page);
 
 		// Método getById com Id existente para retornar um produto
 		Mockito.when(productRepository.getById(existingId)).thenReturn(product);
@@ -186,11 +191,10 @@ public class ProductServicesTests {
 
 		// Act. Ações Necessárias
 		Pageable pageable = PageRequest.of(0, 10);
-		Page<ProductDTO> result = productService.findAllPaged(pageable);
+		Page<ProductDTO> result = productService.findAllPaged(pageable, 0L, "");
 
 		// Assert. Resultado Esperado
 		Assertions.assertNotNull(result);
-		Mockito.verify(productRepository, Mockito.times(1)).findAll(pageable);
 
 	}
 
