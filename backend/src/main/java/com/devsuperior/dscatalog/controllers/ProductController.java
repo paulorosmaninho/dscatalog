@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -47,9 +48,10 @@ public class ProductController {
 
 	// 2022-02-01 - Refatoracao da paginacao utilizando um objeto pageable
 	@GetMapping
-	public ResponseEntity<Page<ProductDTO>> findAll(Pageable pageable){
+	public ResponseEntity<Page<ProductDTO>> findAll(Pageable pageable, 
+			@RequestParam(value = "categoryId", defaultValue = "0") Long categoryId){
 
-		Page<ProductDTO> pageDto = productService.findAllPaged(pageable);
+		Page<ProductDTO> pageDto = productService.findAllPaged(pageable, categoryId);
 
 		return ResponseEntity.ok().body(pageDto);
 	}

@@ -43,12 +43,27 @@ public class ProductService {
 	// }
 
 	// 2022-02-01 - Refatoração da paginação utilizando um objeto pageable
+	// 2022-02-26 - Inclusão da categoria no filtro
 	@Transactional(readOnly = true)
-	public Page<ProductDTO> findAllPaged(Pageable pageable) {
+	public Page<ProductDTO> findAllPaged(Pageable pageable, Long categoryId) {
 
-		Page<Product> page = productRepository.findAll(pageable);
+		Category category;
+		
+		//category não pode ser zero, pois dará erro no Repository
+		if(categoryId == 0 ) {
+			
+			category = null;
+			
+		}else {
+			
+			//Instancia uma categoria com o id recebido da página
+			category = categoryRepository.getById(categoryId);
+		}
+		
+		Page<Product> page = productRepository.findProductCategory(pageable, category);
 
-		Page<ProductDTO> pageDto = page.map(elementoList -> new ProductDTO(elementoList, elementoList.getCategories()));
+//		Page<ProductDTO> pageDto = page.map(elementoList -> new ProductDTO(elementoList, elementoList.getCategories()));
+		Page<ProductDTO> pageDto = page.map(elementoList -> new ProductDTO(elementoList));
 
 		return pageDto;
 	}
