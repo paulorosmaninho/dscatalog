@@ -63,9 +63,13 @@ public class ProductService {
 		}
 		
 		Page<Product> page = productRepository.findProductCategory(pageable, categories, name);
+		
+		//Faz a chamada 'seca' dos produtos com categorias para ficar em memória
+		//Utiliza o método page.getContent() para converter a Page em List ao passar como parâmetro
+		productRepository.findProductsWithCategories(page.getContent());
 
-//		Page<ProductDTO> pageDto = page.map(elementoList -> new ProductDTO(elementoList, elementoList.getCategories()));
-		Page<ProductDTO> pageDto = page.map(elementoList -> new ProductDTO(elementoList));
+		Page<ProductDTO> pageDto = page.map(elementoList -> new ProductDTO(elementoList, elementoList.getCategories()));
+//		Page<ProductDTO> pageDto = page.map(elementoList -> new ProductDTO(elementoList));
 
 		return pageDto;
 	}

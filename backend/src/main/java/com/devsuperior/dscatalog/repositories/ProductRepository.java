@@ -24,6 +24,14 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
 			+ " )"
 			)
 	Page<Product> findProductCategory(Pageable pageable, List<Category> categories, String name);
+	
+	
+	//Acrescentada consulta para buscar Categorias e resolver o problema das N+1 Consultas
+	//As categorias ficarão em memória e o JPA vai orquestrar a utilização delas
+	//JOIN FECTH não aceita objetos Pageable, por isso é preciso fazer duas consultas
+	@Query(value = "SELECT obj FROM Product obj JOIN FETCH obj.categories WHERE obj IN :products")
+	List<Product> findProductsWithCategories(List<Product> products);
+	
 
 // 27/02/2022 - Essa solução não funciona no PostgreSQL, por isso a solução acima foi implementada.
 // Ocorre o erro: ERROR: operator does not exist: bytea = bigint
