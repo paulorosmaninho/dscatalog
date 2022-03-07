@@ -1,0 +1,12 @@
+hello.yml 
+name: HelloWorld 
+on: 
+ push: 
+ branches: 
+ - 'master' 
+jobs: 
+ build: 
+ runs-on: ubuntu-latest 
+ steps: 
+ - name: Printing Hello World
+ run: echo "Hello World! Teste com GitHub Actions"
